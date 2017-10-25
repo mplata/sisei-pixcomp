@@ -29,14 +29,12 @@
             android:id="@+id/txtEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="1@pixcomp.com"
             android:hint="@string/placeholder_email"/>
         <EditText
             android:inputType="textPassword"
             android:id="@+id/txtPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="123456"
             android:hint="@string/placeholder_password"/>
         <Button
             android:onClick="onClikLogin"

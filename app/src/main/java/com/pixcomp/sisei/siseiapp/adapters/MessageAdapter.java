@@ -46,6 +46,8 @@ public class MessageAdapter extends ArrayAdapter<Message> {
         if (p != null) {
             TextView txtMessage = (TextView) v.findViewById(R.id.row_text);
             txtMessage.setText(p.getMessage());
+            TextView txtNickName = (TextView) v.findViewById(R.id.row_nickname);
+            txtNickName.setText(p.getUserNickname());
         }
 
         return v;
