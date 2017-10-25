@@ -7,4 +7,9 @@
     <string name="placeholder_password">Contraseña</string>
     <string name="view_login">Nombre de usuario:</string>
     <string name="placeholder_message">Nuevo mensaje...</string>
+
+    <string name="alert_title">Salir del Chat</string>
+    <string name="alert_message">¿Deseas salir del chat o minimizar?</string>
+    <string name="alert_ok">Salir</string>
+    <string name="alert_notok">Minimizar</string>
 </resources>

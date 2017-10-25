@@ -1,5 +1,6 @@
 package com.pixcomp.sisei.siseiapp;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +8,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -31,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
     //Firebase Authentication
     private FirebaseAuth auth;
 
+    private Dialog progressWait;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +48,25 @@ public class MainActivity extends AppCompatActivity {
         txtEmail = (EditText)findViewById(R.id.txtEmail);
         txtPassword = (EditText)findViewById(R.id.txtPassword);
 
+        initDialog();
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        backBehavior();
+    }
+
+    private void backBehavior(){
+        moveTaskToBack(true);
+    }
+
+    private void initDialog(){
+        progressWait = new Dialog(this);
+        progressWait.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        progressWait.setContentView(R.layout.lay_progressdialog);
+        progressWait.setCanceledOnTouchOutside(false);
+        progressWait.setCancelable(false);
     }
 
     public void onClikLogin(View v){
@@ -54,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, "Correo o password vacios",Toast.LENGTH_SHORT).show();
             return;
         }
+        progressWait.show();
         Task<AuthResult> authResultTask = auth.signInWithEmailAndPassword(email, password);
         authResultTask.addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
@@ -64,9 +88,11 @@ public class MainActivity extends AppCompatActivity {
                     FirebaseUser firebaseUser = task.getResult().getUser();
                     UserManager instance = UserManager.getInstance();
                     instance.createUser(firebaseUser, MainActivity.this);
+                    progressWait.cancel();
                 }else{
                     Log.w(FIREBASE_DEBUG, "signInWithEmail:failed", task.getException());
                     Toast.makeText(MainActivity.this, "Login incorecto: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    progressWait.cancel();
                 }
             }
         });

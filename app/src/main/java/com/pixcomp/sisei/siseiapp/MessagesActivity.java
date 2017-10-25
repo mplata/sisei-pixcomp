@@ -1,12 +1,15 @@
 package com.pixcomp.sisei.siseiapp;
 
+import android.content.DialogInterface;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -45,18 +48,20 @@ public class MessagesActivity extends AppCompatActivity implements ChildEventLis
     private MessageAdapter adapter;
     private ListView messageListView;
     private ArrayList<Message> messages;
+    private Button btnEnviar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messages);
-
+        overridePendingTransition(R.anim.anim_slide_rightin, R.anim.anim_slide_leftout);
         currentUser = UserManager.getInstance().getCurrentUser();
 
         txtNickname = (EditText)findViewById(R.id.txtNickname);
         txtMessage = (EditText)findViewById(R.id.txtMessage);
         messageListView = (ListView)findViewById(R.id.message_list);
-
+        btnEnviar = (Button) findViewById(R.id.btnSendMessage);
+        txtNickname.clearFocus();
 
         String firebaseUid = currentUser.getFirebaseUid();
         userChild = usersRef.child(firebaseUid);
@@ -104,6 +109,7 @@ public class MessagesActivity extends AppCompatActivity implements ChildEventLis
                 }
                 adapter = new MessageAdapter(MessagesActivity.this,R.layout.message_layout,messages);
                 messageListView.setAdapter(adapter);
+                messageListView.setSelection(messages.size()-1);
             }
 
             @Override
@@ -112,6 +118,41 @@ public class MessagesActivity extends AppCompatActivity implements ChildEventLis
             }
         });
         messagesChild.addChildEventListener(this);
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.anim_slide_leftin, R.anim.anim_slide_rightout);
+    }
+
+    @Override
+    public void onBackPressed() {
+        backBehavior();
+    }
+
+    private void backBehavior(){
+        showAlert();
+    }
+
+    private void showAlert(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(getString(R.string.alert_message))
+                .setTitle(getString(R.string.alert_title));
+        builder.setPositiveButton(getString(R.string.alert_ok), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                finish();
+            }
+        });
+        builder.setNegativeButton(getString(R.string.alert_notok), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                moveTaskToBack(true);
+            }
+        });
+        AlertDialog dialog = builder.create();
+        //dialog.setCancelable(false);
+        //dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
     }
 
     public void addMessage(View v){

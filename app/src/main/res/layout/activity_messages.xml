@@ -7,11 +7,14 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingTop="8dp"
+    android:background="@color/colorBlueBack"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
     tools:context="com.pixcomp.sisei.siseiapp.MessagesActivity">
 
     <LinearLayout
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -20,13 +23,14 @@
 
         <TextView
             android:text="@string/view_login"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/view_login"
-            android:textAlignment="center"/>
+            style="@style/Messages_Header"/>
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:maxLines="1"
             android:id="@+id/txtNickname"/>
     </LinearLayout>
 
@@ -36,7 +40,10 @@
         android:layout_width="match_parent"
         android:layout_above="@+id/message_container"
         android:layout_below="@+id/nickname_container"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:divider="@color/colorInvisible"
+        android:focusable="true"
+        android:dividerHeight="4dp"/>
 
     <LinearLayout
         android:orientation="horizontal"
@@ -51,16 +58,18 @@
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:inputType="text"
+            android:maxLines="1"
             android:hint="@string/placeholder_message"
             android:id="@+id/txtMessage"
-            android:layout_weight="0.8"/>
+            android:layout_weight="0.7"/>
 
         <Button
-            android:text="Go"
+            android:text="Enviar"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:id="@+id/btnSendMessage"
-            android:layout_weight="0.2"
-            android:onClick="addMessage"/>
+            android:layout_weight="0.3"
+            android:onClick="addMessage"
+            style="@style/Login_Button"/>
     </LinearLayout>
 </RelativeLayout>
