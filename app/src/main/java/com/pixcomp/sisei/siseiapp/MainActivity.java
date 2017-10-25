@@ -1,32 +1,76 @@
 package com.pixcomp.sisei.siseiapp;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.pixcomp.sisei.siseiapp.data.UserManager;
 
 public class MainActivity extends AppCompatActivity {
+
+    private final String FIREBASE_DEBUG = "FIREBASE";
+    //Containers
+    private View loginContainer;
+    private View messagesContainer;
+
+    //Login Texts
+    private EditText txtEmail;
+    private EditText txtPassword;
+
+    //Firebase Authentication
+    private FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        auth = FirebaseAuth.getInstance();
+
+        loginContainer = (View)findViewById(R.id.login_container);
+        loginContainer.setVisibility(View.VISIBLE);
+
+        txtEmail = (EditText)findViewById(R.id.txtEmail);
+        txtPassword = (EditText)findViewById(R.id.txtPassword);
+
+    }
+
+    public void onClikLogin(View v){
+
+        String email = txtEmail.getText().toString();
+        String password = txtPassword.getText().toString();
+        if(email.isEmpty() || password.isEmpty()){
+            Toast.makeText(MainActivity.this, "Correo o password vacios",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Task<AuthResult> authResultTask = auth.signInWithEmailAndPassword(email, password);
+        authResultTask.addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                Log.d(FIREBASE_DEBUG, task.toString());
+                if(task.isSuccessful()){
+                    Log.d(FIREBASE_DEBUG, "Login correcto");
+                    FirebaseUser firebaseUser = task.getResult().getUser();
+                    UserManager instance = UserManager.getInstance();
+                    instance.createUser(firebaseUser, MainActivity.this);
+                }else{
+                    Log.w(FIREBASE_DEBUG, "signInWithEmail:failed", task.getException());
+                    Toast.makeText(MainActivity.this, "Login incorecto: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                }
             }
         });
-    }
+    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

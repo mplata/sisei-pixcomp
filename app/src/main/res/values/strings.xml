@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">SiseiApp</string>
     <string name="action_settings">Settings</string>
+    <string name="please_login">Iniciar sesión para poder mandar/ver mensajes</string>
+    <string name="login">Iniciar Sesión</string>
+    <string name="placeholder_email">Correo electrónico </string>
+    <string name="placeholder_password">Contraseña</string>
+    <string name="view_login">Nombre de usuario:</string>
+    <string name="placeholder_message">Nuevo mensaje...</string>
 </resources>
